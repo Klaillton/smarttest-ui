@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="p-grid">
+    <div class="p-col-12">
+      <h1>Ocorrências</h1>
+    </div>
+
+    <div class="p-col-12 p-fluid">
+      <label>Número</label>
+      <input pInputText type="text" class="form-control" #number />
+    </div>
+    <div class="p-col-6">
+      <button
+        pButton
+        type="button"
+        label="Calcular"
+        (click)="adicionar(number.value); (number.value)"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Pesquisar"
+        class="p-button-secondary"
+        (click)="procurar(number.value)"
+      ></button>
+    </div>
+  </div>
+
+  <div class="p-grid">
+    <div class="p-col-12">
+      <p-table
+        [value]="occurrences$"
+        [loading]="loading"
+        [responsive]="true"
+        [paginator]="true"
+        [rows]="5"
+        styleClass="p-datatable-striped"
+        [routerLink]=""
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="datetime">Data/Hora</th>
+            <th>Value</th>
+            <th pSortableColumn="number">Numero</th>
+            <th pSortableColumn="occurrence">Ocorrências</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-occurr>
+          <tr>
+            <td>{{ occurr.datetime }}</td>
+            <td>Solution</td>
+            <td>{{ occurr.number }}</td>
+            <td>{{ occurr.occurrence }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td>Sem dados</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
