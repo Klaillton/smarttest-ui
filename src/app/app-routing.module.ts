@@ -14,6 +14,18 @@ const routes: Routes = [
         (m) => m.OccurrencesModule
       ),
   },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'pythagorean',
+  },
+  {
+    path: 'pythagorean',
+    loadChildren: () =>
+      import('./pythagorean/pythagorean.module').then(
+        (m) => m.PythagoreanModule
+      ),
+  },
 ];
 
 @NgModule({

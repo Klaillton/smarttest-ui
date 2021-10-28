@@ -14,8 +14,6 @@ export class OccurrencesComponent implements OnInit {
 
   occurrences$: Occurrence[] = [];
 
-  cols: any[] = [];
-
   constructor(private occurrenceService: OccurrenceService) {}
 
   ngOnInit(): void {

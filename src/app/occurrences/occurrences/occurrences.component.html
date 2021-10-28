@@ -46,7 +46,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-occurr>
           <tr>
-            <td>{{ occurr.datetime }}</td>
+            <td>{{ occurr.datetime | date: "dd/MM/yyyy" }}</td>
             <td>Solution</td>
             <td>{{ occurr.number }}</td>
             <td>{{ occurr.occurrence }}</td>
