@@ -1,11 +1,13 @@
+import { DashboardModule } from './dashboard/dashboard.module';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'occurrences',
+    loadChildren: () =>
+      import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
   {
     path: 'differences',
@@ -13,11 +15,6 @@ const routes: Routes = [
       import('./occurrences/occurrences.module').then(
         (m) => m.OccurrencesModule
       ),
-  },
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'pythagorean',
   },
   {
     path: 'pythagorean',
