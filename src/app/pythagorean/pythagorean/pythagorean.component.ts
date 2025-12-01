@@ -1,15 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { PythagoreanService } from '../service/pythagorean.service';
 import { Pythagorean } from './../model/pythagorean';
 
 @Component({
   selector: 'app-pythagorean',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './pythagorean.component.html',
   styleUrls: ['./pythagorean.component.css'],
 })
 export class PythagoreanComponent implements OnInit {
+  private pythagoreanService = inject(PythagoreanService);
+
   checkoutForm = new FormGroup({
     numA: new FormControl(''),
     numB: new FormControl(''),
@@ -17,10 +34,7 @@ export class PythagoreanComponent implements OnInit {
   });
 
   loading: boolean = false;
-
   pythagorean$: Pythagorean[] = [];
-
-  constructor(private pythagoreanService: PythagoreanService) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -31,19 +45,21 @@ export class PythagoreanComponent implements OnInit {
     setTimeout(() => {
       this.pythagoreanService
         .listar()
-        .then((pythagorean) => (this.pythagorean$ = pythagorean), console.log);
+        .then((pythagorean: Pythagorean[]) => (this.pythagorean$ = pythagorean))
+        .catch(console.log);
       this.loading = false;
     }, 150);
   }
 
   onSubmit() {
-    this.pythagoreanService
-      .addPythagorean(this.checkoutForm.value as Pythagorean)
-      .toPromise()
-      .then((pythagorean) => {
-        this.pythagorean$ = [pythagorean];
-        this.listar();
-      });
+    firstValueFrom(
+      this.pythagoreanService.addPythagorean(
+        this.checkoutForm.value as Pythagorean
+      )
+    ).then((pythagorean: Pythagorean) => {
+      this.pythagorean$ = [pythagorean];
+      this.listar();
+    });
   }
 
   procurar(number: string) {
@@ -52,14 +68,11 @@ export class PythagoreanComponent implements OnInit {
       return;
     }
 
-    let arr = [];
     const findPythagorean: Pythagorean = {} as Pythagorean;
-    return this.pythagoreanService
-      .searchPythagorean(findPythagorean.id)
-      .toPromise()
-      .then((occurrence) => {
-        this.pythagorean$ = [occurrence];
-        console.log;
-      });
+    return firstValueFrom(
+      this.pythagoreanService.searchPythagorean(findPythagorean.id)
+    ).then((occurrence: Pythagorean) => {
+      this.pythagorean$ = [occurrence];
+    });
   }
 }

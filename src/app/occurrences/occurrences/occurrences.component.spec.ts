@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 import { OccurrencesComponent } from './occurrences.component';
 
@@ -8,9 +9,9 @@ describe('OccurrencesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OccurrencesComponent ]
-    })
-    .compileComponents();
+      imports: [OccurrencesComponent],
+      providers: [provideHttpClient()],
+    }).compileComponents();
   });
 
   beforeEach(() => {
