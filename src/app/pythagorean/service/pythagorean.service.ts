@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { Pythagorean } from './../model/pythagorean';
 
@@ -8,19 +9,11 @@ import { Pythagorean } from './../model/pythagorean';
   providedIn: 'root',
 })
 export class PythagoreanService {
-  [x: string]: any;
+  private readonly http = inject(HttpClient);
   private readonly API = 'http://localhost:8080/pythagorean';
 
-  constructor(private http: HttpClient) {}
-
-  listar() {
-    return this.http
-      .get(this.API)
-      .toPromise()
-      .then((res) => <Pythagorean[]>res)
-      .then((res) => {
-        return res;
-      });
+  listar(): Promise<Pythagorean[]> {
+    return firstValueFrom(this.http.get<Pythagorean[]>(this.API));
   }
 
   addPythagorean(newPythagorean: Pythagorean): Observable<Pythagorean> {

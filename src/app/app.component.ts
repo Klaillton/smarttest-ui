@@ -1,24 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-
-import { MenuItem, MessageService, PrimeNGConfig } from 'primeng/api';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet, RouterLink } from '@angular/router';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    ToolbarModule,
+    ButtonModule,
+    RippleModule,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  preserveWhitespaces: true,
 })
-export class AppComponent implements OnInit {
-  items: MenuItem[] = [];
-  primengConfig: PrimeNGConfig;
-  messageService: MessageService;
-
-  constructor() {
-    this.primengConfig = new PrimeNGConfig();
-    this.messageService = new MessageService();
-  }
-
-  ngOnInit() {
-    this.primengConfig.ripple = true;
-  }
-}
+export class AppComponent {}

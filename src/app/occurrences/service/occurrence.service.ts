@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { Occurrence } from './../model/occurrence';
 
@@ -9,19 +9,11 @@ import { Occurrence } from './../model/occurrence';
   providedIn: 'root',
 })
 export class OccurrenceService {
-  [x: string]: any;
+  private readonly http = inject(HttpClient);
   private readonly API = 'http://localhost:8080/difference';
 
-  constructor(private http: HttpClient) {}
-
-  listar() {
-    return this.http
-      .get(this.API)
-      .toPromise()
-      .then((res) => <Occurrence[]>res)
-      .then((res) => {
-        return res;
-      });
+  listar(): Promise<Occurrence[]> {
+    return firstValueFrom(this.http.get<Occurrence[]>(this.API));
   }
 
   addOccurrence(newOccurrence: Occurrence): Observable<Occurrence> {

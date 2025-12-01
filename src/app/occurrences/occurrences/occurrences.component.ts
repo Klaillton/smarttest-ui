@@ -1,20 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { Occurrence } from './../model/occurrence';
 import { OccurrenceService } from './../service/occurrence.service';
 
 @Component({
   selector: 'app-occurrences',
+  standalone: true,
+  imports: [
+    CommonModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './occurrences.component.html',
   styleUrls: ['./occurrences.component.css'],
 })
 export class OccurrencesComponent implements OnInit {
+  private occurrenceService = inject(OccurrenceService);
+
   loading: boolean = false;
-
   occurrences$: Occurrence[] = [];
-
-  constructor(private occurrenceService: OccurrenceService) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -25,7 +37,8 @@ export class OccurrencesComponent implements OnInit {
     setTimeout(() => {
       this.occurrenceService
         .listar()
-        .then((occurrences) => (this.occurrences$ = occurrences), console.log);
+        .then((occurrences: Occurrence[]) => (this.occurrences$ = occurrences))
+        .catch(console.log);
       this.loading = false;
     }, 1000);
   }
@@ -37,13 +50,12 @@ export class OccurrencesComponent implements OnInit {
     }
 
     const newOccurrence: Occurrence = { number } as Occurrence;
-    this.occurrenceService
-      .addOccurrence(newOccurrence)
-      .toPromise()
-      .then((occurrence) => {
+    firstValueFrom(this.occurrenceService.addOccurrence(newOccurrence)).then(
+      (occurrence: Occurrence) => {
         this.occurrences$ = [occurrence];
         this.listar();
-      });
+      }
+    );
   }
 
   procurar(number: string) {
@@ -52,14 +64,12 @@ export class OccurrencesComponent implements OnInit {
       return;
     }
 
-    let arr = [];
     const findOccurrence: Occurrence = { number } as Occurrence;
-    return this.occurrenceService
-      .searchOccurrence(findOccurrence.number)
-      .toPromise()
-      .then((occurrence) => {
-        this.occurrences$ = [occurrence];
-        console.log;
-      });
+    return firstValueFrom(
+      this.occurrenceService.searchOccurrence(findOccurrence.number)
+    ).then((occurrence: Occurrence) => {
+      this.occurrences$ = [occurrence];
+      console.log;
+    });
   }
 }
