@@ -73,7 +73,6 @@ export class PythagoreanComponent implements OnInit {
       this.pythagoreanService.searchPythagorean(findPythagorean.id)
     ).then((occurrence: Pythagorean) => {
       this.pythagorean$ = [occurrence];
-      console.log;
     });
   }
 }

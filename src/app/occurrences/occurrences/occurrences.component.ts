@@ -69,7 +69,6 @@ export class OccurrencesComponent implements OnInit {
       this.occurrenceService.searchOccurrence(findOccurrence.number)
     ).then((occurrence: Occurrence) => {
       this.occurrences$ = [occurrence];
-      console.log;
     });
   }
 }
